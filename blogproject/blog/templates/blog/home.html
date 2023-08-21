@@ -1,0 +1,72 @@
+{% extends 'blog/base.html' %}
+<!-- //Homepage// -->
+{% block content %}
+<div class="container mx-auto relative">
+    <img src="https://images.unsplash.com/photo-1542435503-956c469947f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" class="w-full h-60 object-cover mb-4">
+    <div class="absolute top-0 left-0 w-full h-60 flex flex-col justify-center items-center">
+        <h2 class="text-indigo-800 text-2xl font-bold mb-2 text-center">Through the pages of our diaries, we explore <br>The landscapes of inspiration</h2>
+        <small class=" mb-2 text-center font-bold">Inscribe your aspirations, chronicle your explorations, and embrace the journey of inspiration.</small>
+        <a href="{% url 'register' %}" class="btn btn-primary bg-purple-600 hover:bg-purple-700" style="background-color: #8343FA;">Get started</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for post in page_obj %}
+        <div class="p-6 ">
+            <div class="mb-4">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-50 object-cover rounded-lg shadow-md">
+            </div>
+            <h2 class="text-indigo-800text-xl font-semibold mb-2">{{ post.title|truncatechars:50 }}</h2>
+            <p class="text-gray-600 mb-4">{{ post.content|safe|truncatechars:100 }}</p>
+            <div class="flex items-center text-sm text-gray-600">
+                <svg class="w-4 h-4 fill-current mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path
+                        d="M11 3a2 2 0 11-4 0 2 2 0 014 0zM1 18c0-1.1.9-2 2-2h14a2 2 0 012 2v1a1 1 0 01-1 1H2a1 1 0 01-1-1v-1z" />
+                </svg> {{ post.author }} on {{ post.date_potsed|date:"F d, Y" }}
+            </div>
+            <small>
+                {% if user.is_authenticated %} {% if user.id == post.author.id %}
+                 <a class="self-end mt-4" href="{% url 'update_post' post.pk %}">(Edit)</a>
+                - <a class="self-end mt-4" href="{% url 'delete_post' post.pk %}">(Delete)</a>
+                {% endif %}
+                {% endif %}
+            </small><br>
+            <a href="{% url 'article' post.pk %}" class="btn btn-primary bg-purple-600 hover:bg-purple-700 "><small>Read More</small></a>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- pagination -->
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-5">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %} {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %} {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+
+{% endblock content %}

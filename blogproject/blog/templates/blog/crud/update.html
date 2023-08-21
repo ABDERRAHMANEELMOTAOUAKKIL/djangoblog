@@ -1,0 +1,17 @@
+{% extends 'blog/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<div class="container mx-auto mt-8">
+    {% if user.is_authenticated %} {% if user.id == post.author.id %}
+
+
+    <h1 class="text-3xl font-semibold mb-4">Update Blog Post</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %} {{ form.media }} {{ form|crispy }}
+
+        <div class="d-grid gap-2 col-6 mx-auto mt-4">
+            <button class="btn btn-success text-gray-500" type="submit">Update</button>
+        </div>
+    </form>
+
+    {% endif %} {% endif %}
+</div>
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends 'blog/base.html' %} {% block content %}
+
+<div class="bg-gray-100 min-h-screen flex justify-center items-center">
+    <div class="max-w-3xl mx-auto p-6 ">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-auto object-cover rounded-lg mb-4">
+        <h1 class="text-3xl font-semibold mb-2">{{ post.title }}</h1>
+        <hr class="mb-3">
+        <form action="{% url 'like_post' post.pk %}" method="post">
+            {% csrf_token %} {% if user.is_authenticated %} {%if liked %}
+
+            <button class="btn btn-outline-danger btn-sm" type="submit" name="post_id" value="{{ post.id }}">Unlike</button><br> {% else %}
+            <button class="btn btn-outline-primary btn-sm" type="submit" name="post_id" value="{{ post.id }}">Like</button><br> {% endif %} {% else %}
+            <small class="font-bold text-danger">Must be authenticated to like Posts</small> {%endif%}
+
+
+        </form>
+        <div class="bg-gray-100 font-bold mb-4">
+            {{ total_likes }} Likes
+        </div>
+        <p class="text-gray-600 mb-4">{{ post.content|safe }}</p>
+        <small>
+            {% if user.is_authenticated %} {% if user.id == post.author.id %}
+             <a class="self-end mt-4" href="{% url 'update_post' post.pk %}">(Edit)</a>
+            - <a class="self-end mt-4" href="{% url 'delete_post' post.pk %}">(Delete)</a>
+            {% endif %}
+            {% endif %}
+        </small><br><br>
+        <p class="text-sm text-gray-500">By : {{ post.author }} on {{ post.date_potsed|date:"F d, Y" }}</p>
+
+    </div>
+</div>
+{% endblock content %}

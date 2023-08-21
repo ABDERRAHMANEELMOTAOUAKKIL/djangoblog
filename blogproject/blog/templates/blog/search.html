@@ -1,0 +1,8 @@
+{% extends 'blog/base.html' %}
+<!-- //Homepage// -->
+{% block content %} {% if search_post %}
+
+<h1>you looked for <strong>{{search_post}}</strong></h1> <br> {% for post in posts %} {{post}} - {{post.content}}
+<br> {%endfor%} {%else%}
+<h1>U forgot to search </h1>
+{% endif %} {% endblock content %}
